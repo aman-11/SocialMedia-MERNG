@@ -1,36 +1,62 @@
-const { gql } = require('apollo-server');  //dependency installed in apollo_server
+const { gql } = require("apollo-server"); //dependency installed in apollo_server
 
 module.exports = gql`
-    
-    type Post{    #post jb return krega toh kon si field sth krega so post object type
-        id: ID!
-        body: String!
-        createdAt: String!
-        username: String!
-    }
+  type Post { #post jb return krega toh kon si field sth krega so post object type
+    id: ID!
+    body: String!
+    createdAt: String!
+    username: String!
+    comments: [Comment]!
+    likes: [Like]!
+    likesCount: Int!
+    commentCount: Int!
+  }
 
-    type User{ #user
-        id: ID!
-        email: String!
-        token: String!
-        username: String!
-        createdAt: String!
-    }
+  type Comment { #comment
+    id: ID!
+    createdAt: String!
+    username: String!
+    body: String!
+  }
 
-    input RegisterInput {
-        username: String!
-        password: String!
-        confirmPassword: String!
-        email: String!
-    }
+  type Like { #comment
+    id: ID!
+    createdAt: String!
+    username: String!
+  }
 
-    type Query{    #query type ke endpoint bata do and specify return type
-        getPosts: [Post]
-    }
+  type User { #user
+    id: ID!
+    email: String!
+    token: String!
+    username: String!
+    createdAt: String!
+  }
 
-    type Mutation{ #mutation type
-        register(registerInput: RegisterInput): User!
-        login(username: String!, password: String!): User!
-    }
+  input RegisterInput {
+    username: String!
+    password: String!
+    confirmPassword: String!
+    email: String!
+  }
 
-`
+  type Query { #query type ke endpoint bata do and specify return type
+    getPosts: [Post]
+    getPost(postId: ID!): Post
+  }
+
+  type Mutation { #mutation type
+    register(registerInput: RegisterInput): User! #object-> registerInput -> registerInput: { username, password, confirmPassword, email }
+    login(username: String!, password: String!): User!
+    createPost(body: String!): Post!
+    deletePost(postId: ID!): String!
+    createComment(postId: ID!, body: String!): Post!
+    deleteComment(postId: ID!, commentId: ID!): Post!
+    likePost(postId: ID!): Post!
+  }
+
+  #extra learning
+  type Subscription {
+    newPost: Post!
+  }
+`;

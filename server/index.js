@@ -1,38 +1,81 @@
-const {ApolloServer} = require('apollo-server');
-const mongoose = require('mongoose');
+const express = require("express");
+const { ApolloServer } = require("apollo-server-express");
+const http = require("http");
+const cors = require("cors");
 
-const typeDefs = require('./graphql/typeDefs');
-const { MONGODB } = require('./config.js');
-const resolvers = require('./graphql/resolvers/indexResolve');
+const { ApolloServerPluginDrainHttpServer } = require("apollo-server-core");
+const { WebSocketServer } = require("ws");
+const { useServer } = require("graphql-ws/lib/use/ws");
 
-//creating the apollo server
-const server = new ApolloServer({
-    typeDefs,
-    resolvers
-})
+//typeDefs, resolvers
+const { makeExecutableSchema } = require("@graphql-tools/schema");
+const typeDefs = require("./graphql/typeDefs");
+const resolvers = require("./graphql/resolvers/indexResolve");
 
-mongoose
+//DB
+const { MONGODB } = require("./config.js");
+const mongoose = require("mongoose");
+
+(async function startApolloServer(typeDefs, resolvers) {
+  // Required logic for integrating with Express
+
+  const app = express();
+  const httpServer = http.createServer(app);
+
+  const schema = makeExecutableSchema({ typeDefs, resolvers });
+
+  //   const pubsub = new PubSub();
+  var corsOptions = {
+    origin: "*",
+    credentials: true,
+  };
+  app.use(cors(corsOptions));
+
+  // Same ApolloServer initialization as before, plus the drain plugin.
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: "/graphql",
+  });
+  const serverCleanup = useServer({ schema }, wsServer);
+
+  // Set up ApolloServer.
+  const server = new ApolloServer({
+    schema,
+    context: ({ req }) => ({ req }),
+    plugins: [
+      // Proper shutdown for the HTTP server.
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      // Proper shutdown for the WebSocket server.
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              await serverCleanup.dispose();
+            },
+          };
+        },
+      },
+    ],
+  });
+
+  await server.start();
+  server.applyMiddleware({
+    app,
+    cors: false,
+  });
+
+  mongoose
     .connect(MONGODB, { useNewUrlParser: true })
-    .then(() => {
-        console.log('db connected successfully');
-        return server.listen({port: 5000});
+    .then(async () => {
+      console.log("db connected successfully");
+      await new Promise((resolve) =>
+        httpServer.listen({ port: 5000 }, resolve)
+      );
+      console.log(
+        `🚀 Server ready at http://localhost:5000${server.graphqlPath}`
+      );
     })
-    .then( res => {
-        console.log(`server running at ${res.url}`)
+    .catch((error) => {
+      console.log("error in server", error);
     });
-
-
-
-
-/*******************************
- * 
- * @Resolver()
-    export  class  HelloResolver{
-    
-    @Query( () => String)
-    hello(){
-        return "hello world from graphql and byeeee";
-    }
-
-}
- *************************************************/
+})(typeDefs, resolvers);
