@@ -9,7 +9,7 @@ module.exports = (context) => {
   if (authHeader) {
     //bearer token
     const token = authHeader.split("Bearer ")[1];
-    console.log("auth token", token);
+    //console.log("auth token", token);
 
     if (token) {
       try {
