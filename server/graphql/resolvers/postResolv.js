@@ -3,6 +3,8 @@ const checkAuth = require("../../utils/check-auth");
 const { AuthenticationError } = require("apollo-server");
 const { UserInputError } = require("apollo-server");
 const { PubSub } = require("graphql-subscriptions");
+
+//creating instance from the  PubSub class
 const pubsub = new PubSub();
 
 module.exports = {
@@ -50,6 +52,11 @@ module.exports = {
 
       //middleware came into action to verify request send to apollo
       //checkauth returns me token or error
+
+      if (body.trim() === "") {
+        throw new Error("Post must no be empty!");
+      }
+
       const newPost = new Post({
         body,
         user: user.id,
