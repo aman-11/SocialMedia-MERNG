@@ -2,21 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-
-//setting up the Apollo client
-import {
-  ApolloClient,
-  InMemoryCache, //caching
-  ApolloProvider,
-} from "@apollo/client";
-
-//creating the client instance
-const client = new ApolloClient({
-  //   link: httpLink,
-  uri: "http://localhost:5000/graphql",
-  cache: new InMemoryCache(),
-});
-
+import { ApolloProvider } from "@apollo/client";
+import { client } from "./ApolloClient";
+// //setting up the Apollo client
 ReactDOM.render(
   <ApolloProvider client={client}>
     <App />
