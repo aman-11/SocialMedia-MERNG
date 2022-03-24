@@ -11,18 +11,29 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MenuBar from "./components/MenuBar";
 
+//context API
+import { AuthProvider } from "./context/auth";
+
+//authentication of route
+import AuthRoute from "./utils/AuthRoute"; //and use in place of the route
+
 function App() {
   return (
-    <Router>
-      <Container>
-        <MenuBar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
-      </Container>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Container>
+          <MenuBar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<AuthRoute Component={Login} />} />
+            <Route
+              path="/register"
+              element={<AuthRoute Component={Register} />}
+            />
+          </Routes>
+        </Container>
+      </Router>
+    </AuthProvider>
   );
 }
 

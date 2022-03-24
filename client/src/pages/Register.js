@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Button, Form } from "semantic-ui-react";
 import { gql, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
@@ -6,8 +6,12 @@ import { useNavigate } from "react-router-dom";
 //import custom hook
 import { useForm } from "../utils/hooks";
 
+//use context
+import { AuthContext } from "../context/auth";
+
 function Register(props) {
   const navigate = useNavigate();
+  const context = useContext(AuthContext); //context
 
   //setting up the  errro returned by graphql
   const [errors, setErros] = useState({});
@@ -34,6 +38,10 @@ function Register(props) {
     update(_, result) {
       //params(proxy, result)
       console.log("result", result); //result is the data which we get back from server
+
+      //after successfully login pass the data to context store using dispatch event
+      context.login(result.data.register);
+
       navigate("/");
     },
     onError(err) {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Button, Form } from "semantic-ui-react";
 import { gql, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
@@ -6,8 +6,12 @@ import { useNavigate } from "react-router-dom";
 //import custom hook
 import { useForm } from "../utils/hooks";
 
+//use context
+import { AuthContext } from "../context/auth";
+
 function Login(props) {
   const navigate = useNavigate();
+  const context = useContext(AuthContext); //context
   const [errors, setErros] = useState({});
 
   //using custom Hook
@@ -22,7 +26,12 @@ function Login(props) {
       password: values.password,
     },
     update(_, result) {
-      console.log("result", result);
+      console.log("login result", result.data.login);
+
+      //after successfully login pass the data to context store using dispatch event
+      context.login(result.data.login);
+
+      //nav back to home
       navigate("/");
     },
     onError(err) {
