@@ -26,7 +26,7 @@ function Login(props) {
       password: values.password,
     },
     update(_, result) {
-      console.log("login result", result.data.login);
+      //console.log("login result", result.data.login);
 
       //after successfully login pass the data to context store using dispatch event
       context.login(result.data.login);
