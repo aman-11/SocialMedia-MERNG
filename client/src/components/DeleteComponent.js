@@ -5,32 +5,39 @@ import { Button, Confirm, Icon } from "semantic-ui-react";
 //query
 import { GET_POSTS } from "../utils/graphqlQuery";
 
-function DeleteComponent({ postId, callback }) {
+function DeleteComponent({ postId, commentId, callback }) {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const [deletePost] = useMutation(DELETE_POST, {
-    variables: { postId },
+  const queryType = commentId ? DELETE_COMMENT : DELETE_POST;
+
+  const [performDelete] = useMutation(queryType, {
+    variables: { postId, commentId },
     update(proxy) {
       setConfirmOpen(false);
 
-      //TODO --> remove from Cache
-      const data = proxy.readQuery({
-        query: GET_POSTS,
-      });
-      //make copy as cache is read only
-      let newData = { ...data };
-      //filter out the post from the array of old posts
-      newData.getPosts = newData.getPosts.filter((post) => post.id !== postId);
-      console.log("newData", newData);
-      //write query
-      proxy.writeQuery({
-        query: GET_POSTS,
-        data: {
-          getPosts: [...newData.getPosts],
-        },
-      });
+      //conditiona; update of cache after post -> on delete action
+      if (!commentId) {
+        //TODO --> remove from Cache
+        const data = proxy.readQuery({
+          query: GET_POSTS,
+        });
+        //make copy as cache is read only
+        let newData = { ...data };
+        //filter out the post from the array of old posts
+        newData.getPosts = newData.getPosts.filter(
+          (post) => post.id !== postId
+        );
+        console.log("newData", newData);
+        //write query
+        proxy.writeQuery({
+          query: GET_POSTS,
+          data: {
+            getPosts: [...newData.getPosts],
+          },
+        });
+      }
 
-      //case when home delete happens so check callback is passed or not
+      //case when postCard delete happens so check callback is passed or not
       if (callback) callback();
     },
   });
@@ -48,7 +55,7 @@ function DeleteComponent({ postId, callback }) {
       <Confirm
         open={confirmOpen}
         onCancel={() => setConfirmOpen(false)}
-        onConfirm={deletePost}
+        onConfirm={performDelete}
       />
     </>
   );
@@ -57,6 +64,30 @@ function DeleteComponent({ postId, callback }) {
 const DELETE_POST = gql`
   mutation DeletePost($postId: ID!) {
     deletePost(postId: $postId)
+  }
+`;
+
+const DELETE_COMMENT = gql`
+  mutation DeleteComment($postId: ID!, $commentId: ID!) {
+    deleteComment(postId: $postId, commentId: $commentId) {
+      id
+      body
+      createdAt
+      username
+      likes {
+        username
+        createdAt
+        id
+      }
+      comments {
+        id
+        username
+        body
+        createdAt
+      }
+      likesCount
+      commentCount
+    }
   }
 `;
 
