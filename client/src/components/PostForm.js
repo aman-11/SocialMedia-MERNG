@@ -21,7 +21,7 @@ function PostForm() {
     update(proxy, result) {
       //updating the cache as proxy gives all access to read data in apollo client cache
       // ...after the create is done is and it is an old data
-      const updatedData = proxy.readQuery({
+      const oldData = proxy.readQuery({
         query: GET_POSTS,
       });
       //now append updated data and old data
@@ -29,7 +29,7 @@ function PostForm() {
       proxy.writeQuery({
         query: GET_POSTS,
         data: {
-          getPosts: [result.data.createPost, ...updatedData.getPosts],
+          getPosts: [result.data.createPost, ...oldData.getPosts],
         },
       });
 
@@ -60,7 +60,7 @@ function PostForm() {
         </Form.Field>
       </Form>
       {error && (
-        <div className="ui error message" style={{marginBottom:20}}>
+        <div className="ui error message" style={{ marginBottom: 20 }}>
           <ul className="list">
             <li>{error.graphQLErrors[0].message}</li>
           </ul>

@@ -6,6 +6,7 @@ import moment from "moment";
 //get the context
 import { AuthContext } from "../context/auth";
 import LikeComponent from "./LikeComponent";
+import DeleteComponent from "./DeleteComponent";
 
 function PostCard({
   post: {
@@ -47,16 +48,7 @@ function PostCard({
           </Label>
         </Button>
 
-        {user && user.username === username && (
-          <Button
-            as="div"
-            color="red"
-            floated="right"
-            onClick={() => console.log("delete post", id)}
-          >
-            <Icon name="trash" style={{ margin: 0 }} />
-          </Button>
-        )}
+        {user && user.username === username && <DeleteComponent postId={id} />}
       </Card.Content>
     </Card>
   );

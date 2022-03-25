@@ -18,10 +18,6 @@ function LikeComponent({ user, likeDetails: { id, likes, likesCount } }) {
     variables: { postId: id },
   });
 
-  //   const likeOnPost = () => {
-  //     console.log("you have liked this post");
-  //   };
-
   //done for ui changes and auth user
   const likeButton = user ? (
     liked ? (

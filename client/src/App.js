@@ -16,6 +16,7 @@ import { AuthProvider } from "./context/auth";
 
 //authentication of route
 import AuthRoute from "./utils/AuthRoute"; //and use in place of the route
+import ViewPost from "./pages/ViewPost";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
               path="/register"
               element={<AuthRoute Component={Register} />}
             />
+            <Route path="/posts/:postId" element={<ViewPost />} />
           </Routes>
         </Container>
       </Router>
