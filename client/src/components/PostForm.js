@@ -25,7 +25,6 @@ function PostForm() {
         query: GET_POSTS,
       });
       //now append updated data and old data
-      //updatedData.getPosts = [result.data.createPost, ...updatedData.getPosts];
       //now to persist it or hold the data wen need to 'write' the query
       proxy.writeQuery({
         query: GET_POSTS,
@@ -44,20 +43,30 @@ function PostForm() {
   }
 
   return (
-    <Form onSubmit={onSubmit}>
-      <h2>Create a post:</h2>
-      <Form.Field>
-        <Form.Input
-          placeholder="Say hi..."
-          name="body"
-          onChange={handleValues}
-          value={values.body}
-        />
-        <Button type="submit" color="teal">
-          Create
-        </Button>
-      </Form.Field>
-    </Form>
+    <>
+      <Form onSubmit={onSubmit}>
+        <h2>Create a post:</h2>
+        <Form.Field>
+          <Form.Input
+            placeholder="Say hi..."
+            name="body"
+            onChange={handleValues}
+            value={values.body}
+            error={error ? true : false}
+          />
+          <Button type="submit" color="teal">
+            Create
+          </Button>
+        </Form.Field>
+      </Form>
+      {error && (
+        <div className="ui error message" style={{marginBottom:20}}>
+          <ul className="list">
+            <li>{error.graphQLErrors[0].message}</li>
+          </ul>
+        </div>
+      )}
+    </>
   );
 }
 
