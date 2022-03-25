@@ -2,11 +2,15 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Button, Icon, Label, Card, Image, Popup } from "semantic-ui-react";
 import moment from "moment";
+import { useApolloClient } from "@apollo/client";
+import { GET_POSTS } from "../utils/graphqlQuery";
 
 //get the context
 import { AuthContext } from "../context/auth";
+
 import LikeComponent from "./LikeComponent";
 import DeleteComponent from "./DeleteComponent";
+import MyPopup from "../utils/MyPopup";
 
 function PostCard({
   post: {
@@ -22,14 +26,29 @@ function PostCard({
 }) {
   const { user } = useContext(AuthContext);
 
+  const client = useApolloClient();
+  const postData = client.readQuery({
+    query: GET_POSTS,
+  });
+  var posts = postData?.getPosts;
+  posts = posts.filter((post) => (post.username === username ? true : false));
+  // console.log("post", posts);
+  const popupDetails = {
+    username,
+    posts,
+  };
+
   return (
     <Card fluid>
       <Card.Content>
-        <Image
-          floated="right"
-          size="mini"
-          src="https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-        />
+        <MyPopup content={popupDetails}>
+          <Image
+            style={{ cursor: "pointer" }}
+            floated="right"
+            size="mini"
+            src="https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
+          />
+        </MyPopup>
         <Card.Header>{username}</Card.Header>
         <Card.Meta as={Link} to={`/posts/${id}`}>
           {moment(createdAt).fromNow()}
@@ -43,10 +62,20 @@ function PostCard({
           inverted
           trigger={
             <Button as="div" labelPosition="right">
-              <Button color="blue" basic as={Link} to={`/posts/${id}`}>
+              <Button
+                color={user ? "blue" : "grey"}
+                basic
+                as={Link}
+                to={`/posts/${id}`}
+              >
                 <Icon name="comments" />
               </Button>
-              <Label as="a" basic color="blue" pointing="left">
+              <Label
+                color={user ? "blue" : "grey"}
+                as="a"
+                basic
+                pointing="left"
+              >
                 {commentCount}
               </Label>
             </Button>

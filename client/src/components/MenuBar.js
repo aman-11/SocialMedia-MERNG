@@ -22,10 +22,20 @@ function MenuBar() {
   const menuBar = user ? (
     <div>
       <Menu pointing secondary size="massive" color="blue">
-        <Menu.Item name={user.username} active as={Link} to="/" />
+        <Menu.Item
+          name={user.username}
+          active
+          as={Link}
+          to="/"
+          style={{ letterSpacing: 1, fontWeight: 600 }}
+        />
 
         <Menu.Menu position="right">
-          <Menu.Item name="Logout" onClick={logoutUser} />
+          <Menu.Item
+            name="Logout"
+            onClick={logoutUser}
+            style={{ letterSpacing: 1, fontWeight: 600 }}
+          />
         </Menu.Menu>
       </Menu>
     </div>

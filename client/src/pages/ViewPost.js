@@ -84,10 +84,10 @@ function ViewPost() {
                   labelPosition="right"
                   onClick={() => console.log("comment on post")}
                 >
-                  <Button basic color="blue">
+                  <Button basic color={user ? "blue" : "grey"}>
                     <Icon name="comments" />
                   </Button>
-                  <Label basic color="blue" position="left">
+                  <Label basic color={user ? "blue" : "grey"} position="left">
                     {post.commentCount}
                   </Label>
                 </Button>

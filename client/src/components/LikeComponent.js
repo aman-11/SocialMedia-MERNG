@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Button, Icon, Label } from "semantic-ui-react";
 import { gql, useMutation } from "@apollo/client";
+import { useNavigate } from "react-router";
 
 function LikeComponent({ user, likeDetails: { id, likes, likesCount } }) {
   const [liked, setLiked] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user && likes.find((like) => like.username === user.username)) {
@@ -32,7 +34,7 @@ function LikeComponent({ user, likeDetails: { id, likes, likesCount } }) {
       </Button>
     )
   ) : (
-    <Button as="Link" to="/login" color="red" basic onClick={likeOnPost}>
+    <Button as="Link" onClick={() => navigate("/login")} color="grey" basic>
       <Icon name="heart" />
     </Button>
   );
@@ -40,7 +42,7 @@ function LikeComponent({ user, likeDetails: { id, likes, likesCount } }) {
   return (
     <Button as="div" labelPosition="right">
       {likeButton}
-      <Label as="a" basic color="red" pointing="left">
+      <Label as="a" basic color={user ? "red" : "grey"} pointing="left">
         {likesCount}
       </Label>
     </Button>
@@ -62,8 +64,7 @@ const LIKE_ON_POST = gql`
 
 export default LikeComponent;
 
-
 //wonder how it is updating the cache in apollo client after mutation as we have not used any proxy
-//1. in mutation we have used id to update like for post 
-//2. after mutation happens for likPost its return type is Post 
+//1. in mutation we have used id to update like for post
+//2. after mutation happens for likPost its return type is Post
 //3. when Post is returned the apollo gets the id and check if Post is there in cache it automatically updatees it withput writing query
