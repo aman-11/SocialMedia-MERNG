@@ -1,7 +1,7 @@
 import moment from "moment";
 import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Card, Feed, Header, Placeholder, Popup } from "semantic-ui-react";
+import { Card, Feed, Placeholder, Popup } from "semantic-ui-react";
 
 function MyPopup({ content: { username, posts }, children }) {
   const [data, setData] = useState(null);
