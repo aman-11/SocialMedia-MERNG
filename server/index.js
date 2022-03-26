@@ -64,18 +64,20 @@ const mongoose = require("mongoose");
     cors: false,
   });
 
+  const PORT = process.env.port || 5000;
+
   mongoose
     .connect(MONGODB, { useNewUrlParser: true })
     .then(async () => {
       console.log("db connected successfully");
       await new Promise((resolve) =>
-        httpServer.listen({ port: 5000 }, resolve)
+        httpServer.listen({ port: PORT }, resolve)
       );
       console.log(
         `🚀 Server ready at http://localhost:5000${server.graphqlPath}`
       );
     })
     .catch((error) => {
-      console.log("error in server", error);
+      console.error("error in connecting database", error);
     });
 })(typeDefs, resolvers);
