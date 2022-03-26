@@ -9,7 +9,7 @@
 
 MERNG Stack
 
-This project gives you the basic understanding of working with server and clinet side using tech stack. 
+This project gives you the basic understanding of working with server and clinet side using tech stack by building a clone of social media platform.
 
 **Features include**
 ###User
