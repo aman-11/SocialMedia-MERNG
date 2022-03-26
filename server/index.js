@@ -64,7 +64,7 @@ const mongoose = require("mongoose");
     cors: false,
   });
 
-  const PORT = process.env.port || 5000;
+  const PORT = process.env.PORT || 5000;
 
   mongoose
     .connect(MONGODB, { useNewUrlParser: true })
@@ -81,3 +81,4 @@ const mongoose = require("mongoose");
       console.error("error in connecting database", error);
     });
 })(typeDefs, resolvers);
+//

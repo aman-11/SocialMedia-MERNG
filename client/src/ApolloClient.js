@@ -9,7 +9,7 @@ import {
 import { setContext } from "@apollo/client/link/context";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:5000/graphql",
+  uri: "https://powerful-spire-05323.herokuapp.com/graphql",
 });
 
 //setContext takes a function with 2 params req, prev data if req since we dont need any of theese`
