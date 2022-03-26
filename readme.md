@@ -12,21 +12,21 @@ MERNG Stack
 This project gives you the basic understanding of working with server and clinet side using tech stack by building a clone of social media platform.
 
 **Features include**
-###User
+### User
 1. Register
 2. Login
 3. Can View other users post in *Popup* by clicking Image in Home page 
 4. Create Post
 5. Like, Comment, delete(own post)
 
-###Server-Authentication
+### Server-Authentication
 1. Jwt Token Auth
 2. User Query Validation from Serve side
 
 ___________________________________________________________________________________________________
 ## CLIENT
 
-### `npm start` to sart client
+### `npm start` to start client
 
 hosted on netlify --- https://ubiquitous-figolla-7009a2.netlify.app/
 
